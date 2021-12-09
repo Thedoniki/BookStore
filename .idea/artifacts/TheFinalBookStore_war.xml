@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="TheFinalBookStore:war">
+    <output-path>$PROJECT_DIR$/TheFinalBookStore/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>TheFinalBookStore</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="${project.artifactId}-${project.version}.war">
+      <element id="artifact" artifact-name="TheFinalBookStore:war exploded" />
+    </root>
+  </artifact>
+</component>

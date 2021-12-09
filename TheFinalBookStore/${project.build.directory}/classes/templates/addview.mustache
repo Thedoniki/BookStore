@@ -1,0 +1,90 @@
+
+  <style>
+  *{
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+   .container{
+     display:flex;
+     justify-content: center;
+     font-size: 26px;
+   }
+    
+  .button{
+    width: 100px;
+    height: 25px;
+    margin-top: 1rem;
+        }
+
+  p{
+     color:#fff;
+   }
+
+
+      .inputAdd{
+          margin-bottom: 1rem;
+          font-size: 20px;
+
+      }
+      .inputAddBox{
+          width: 20em;
+      }
+
+
+  </style>
+{{>header}}
+
+  <div class="container">
+
+
+      <div class="d-flex justify-content-center m-2">
+          <!--POST= send data to http protocol body. action has the directory/mapping where to send the data-->
+          <!--@RequestMapping(value="/add", method = RequestMethod.GET)-->
+
+          <form  action="/book/add" method="POST">
+              <div class="inputAdd"> <p class="flex-content">Fill in requested information to add a new book to the database </p><br>
+                  <label>
+                      <input type="text" placeholder="ISBN" value="" name="ISBN" required>
+                  </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Author" value="" name="author" required>
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Title"  value="" name="title" required>
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Language" value="" name="language">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Release date" value="" name="releseDate">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="publisher" value="" name="publisher">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Pages" value="" name="pages">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Genre" value="" name="genre">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="Current storage amount" value="" name="storage">
+              </label></div>
+              <div class="inputAdd"><label>
+                  <input class="inputAddBox" type="text" placeholder="ImageUrl" value="" name="imageUrl">
+              </label></div>
+
+              <div class="d-flex">
+                  <div class="button"><button type="submit" class="btn btn-primary">Save</button></div> <!--Sends data to action-->
+              </div>
+          </form>
+
+      </div>
+  </div>
+
+
+
+  {{>footer}}

@@ -1,0 +1,46 @@
+<style>
+
+    .topCardNavParagraph{
+        color: grey;
+        margin-left: 0.5em;
+        font-style: italic;
+
+    }
+    .topCardNav{
+        height:1.5em;
+        width: 200px;
+        padding-bottom: 0.3em;
+        border-bottom: 1px solid #787878;
+
+    }
+
+    .cardtextpar{
+        margin-left: 2px;
+    }
+</style>
+{{>header}}
+<div class="container" >
+    <div class="d-flex justify-content-center m-2">
+        {{#books}}<!--Loops list that shows user name,id and image for every user.-->
+            <div class="d-inline-flex p-3">
+                <div class="card text-black bg-white " style="width:200px" style="height:200px"><!--Card with userinfo-->
+                    <nav class="topCardNav"><p class="topCardNavParagraph">{{genre}}</p></nav>
+                    <img class="card-img-top p-2" src="{{imageUrl}}" alt="Card image" style="width:200px;height:250px"> <!--user = Model attribute while imageUrl points to user object-->
+                    <nav class="card-navbar  p-0 m-0" style="width:200px;height:70px">
+                        <h6 class="card-title m-2"><strong>Title: {{title}}</strong></h6>
+                    </nav>
+                    <em class="card-text m-1">
+                        <p class="cardtextpar">Author: {{author}} <br> Release date: {{releseDate}}</p>
+                    </em>
+                    <div class="card-footer p-1 m-0" style="width:100%" style="height:50%">
+                        <a href="/book/{{ISBN}}" class="btn btn-primary btn-sm float-right m-0" style="width:40%; height:50%">Select</a><!-- link next to user to get more info and redirects you to the matched id,
+                                                 triggers first UsersCont. that redirects to User Cont.-->
+                    </div>
+                </div>
+            </div>
+        {{/books}}
+    </div>
+</div>
+</div>
+</body>
+</html>

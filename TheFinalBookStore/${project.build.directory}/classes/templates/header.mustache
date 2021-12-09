@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>All Books</title> <!--CHANGE!!!!!-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+
+        /* header */
+        body{
+            background-color: #dd8037;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            height: 11em;
+        }
+
+        header div {
+            display: flex;
+            flex:3;
+            justify-content: center;
+            background-color: #dd8037;
+        }
+
+
+        .logo {
+            margin-bottom: 1rem;
+
+            font-size: 7em;
+
+        }
+
+        .primaryLogoImg{
+            width: 40em;
+            height: 7em;
+            align-items: center;
+        }
+        .primaryLogo{
+
+            margin-bottom: -2rem;
+        }
+
+        .addNewButton{
+            width: 35%;
+            margin-bottom: -1rem;
+            margin-left: 8em;
+        }
+
+
+        .navbar{
+            margin-top: 3px;
+            margin-bottom: 3px;
+            padding-top: 10px;
+            padding-bottom: 0px;
+            justify-content: center;
+            background-color: #ce630f;
+        }
+
+        .form-control{
+            height: 30px;
+            padding-left: 40px;
+            padding-right: 40px;
+            color: darkgray;
+        }
+        .btn{
+            padding-top:2px;
+            padding-bottom: 5px;
+            height: 30px;
+            text-decoration: #46606d;
+            color: darkgray;
+        }
+    </style>
+
+</head>
+<body>
+<div>
+    <header>
+        <div class="logo"> <!--https://www.compart.com/en/unicode/U+1F4D6-->
+            &#x1F4D6;
+        </div>
+
+        <div class="primaryLogo">
+            <a href="/bookshop/"><img  class="primaryLogoImg" src="/images/BookShopLogo.png" alt="BookShop" /> </a>
+        </div>
+        <div>
+            <a href="/book/add"><img class="addNewButton" src="/images/addnewBookbtn.png" alt="Add new book" /></a>
+        </div>
+    </header>
+    <!--Nav START-->
+    <nav class="navbar">
+        <div class="search-container rounded-left">
+            <form class="form-inline">
+                <div class="input-group">
+                    <input class="form-control" type="search" placeholder="ISBN/Title/Author" aria-label="Search">
+                    <span class="input-group-btn">
+           <a href="#" ><button class="btn btn-light rounded-0" type="submit">Search</button></a>
+         </span>
+                </div>
+            </form>
+        </div>
+
+    </nav>
+</div>
+<!--Nav END-->
+<!--Breadcrumbs START-->
+<nav aria-label="breadcrumb m-1" >
+    <ol class="breadcrumb"  style="background-color: #dd8037;">
+        <li class="breadcrumb-item"><a class="text-secondary" href="#">Home </a></li>
+        <a href="/bookshop/"> <li class="breadcrumb-item breadcrumb-secondary active">/ All books</li></a>
+    </ol>
+</nav>
+<!--Breadcrumbs END-->

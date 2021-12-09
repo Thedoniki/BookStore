@@ -1,0 +1,23 @@
+
+  {{>header}}
+  <div class="container p-3 my-3 " >
+      <div class="d-flex justify-content-center m-2">
+   <div> <img class="" src="{{book.imageUrl}}"  style="width:200px;height:250px" alt="">
+   <p>{{book.ISBN}}<br>{{book.author}}<br>{{book.title}}<br>{{book.language}}<br>{{book.pages}}<br>{{book.genre}}<br>{{book.storage}}<br>{{book.releseDate}} </p>
+
+          </div>
+<br>
+
+          <div>
+              <a href="/book/{{book.ISBN}}/edit" class="btn btn-primary btn-sm">Edit</a><!--Sends data to action-->
+
+              <a href="/book/{{book.ISBN}}/delete" class="btn btn-primary btn-sm">Delete</a><!--Sends data to action-->
+          </div>
+
+      </div>
+
+      </div>
+
+
+
+  {{>footer}}

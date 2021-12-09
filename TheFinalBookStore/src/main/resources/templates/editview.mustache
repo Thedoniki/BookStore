@@ -1,0 +1,52 @@
+
+<style>
+
+    .updateBtn{
+        margin-top: 1rem;
+    }
+
+</style>
+
+{{>header}}
+<div class="container-sm p-3 my-3 " >
+
+    <div class="d-flex justify-content-center m-2">
+
+        <form method="POST" action="/book/{{ISBN}}/edit" name = "book">
+
+            <p class="flex-content">You are now editing the book with ISBN:{{book.ISBN}}</p>
+            <p>Edit <span style='font-size:20px;'>&#x270D;</span></p>
+            <input  type="hidden" name="ISBN" value="{{#book.ISBN}}{{book.ISBN}}{{/book.ISBN}}"> <br>
+            <label>Author:</label><br>
+            <input type="text"  name="author" value="{{#book.author}}{{book.author}}{{/book.author}}"><br>
+            <label>Book title:</label><br>
+            <input type="text" name="title" value="{{#book.title}}{{book.title}}{{/book.title}}"><br>
+            <label>Language:</label><br>
+            <input type="text" name="language" value="{{#book.language}}{{book.language}}{{/book.language}}"><br>
+            <label>Release date:</label><br>
+            <input type="text"  name="releseDate" value="{{#book.releseDate}}{{book.releseDate}}{{/book.releseDate}}"><br>
+            <label>Publisher:</label><br>
+            <input type="text" name="publisher" value="{{#book.publisher}}{{book.publisher}}{{/book.publisher}}"><br>
+            <label>Pages:</label><br>
+            <input type="text" name="pages" value="{{#book.pages}}{{book.pages}}{{/book.pages}}"><br>
+            <label>Genre:</label><br>
+            <input type="text" name="genre" value="{{#book.genre}}{{book.genre}}{{/book.genre}}"><br>
+            <label>Storage amount:</label><br>
+            <input type="text" name="storage" value="{{#book.storage}}{{book.storage}}{{/book.storage}}"><br>
+            <label>Image URL:</label><br>
+            <input type="text"  name="imageUrl" value="{{#book.imageUrl}}{{book.imageUrl}}{{/book.imageUrl}}"><br>
+
+            <div class="d-flex">
+                <div class="updateBtn"><button type="submit" class="btn btn-primary">Update Book</button></div> <!--Sends data to action-->
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- Check if errorMessage is not null and not empty -->
+
+<div class="error">{{#errorMessage}}{{errorMessage}}{{/errorMessage}}</div>
+
+{{>footer}}
