@@ -169,9 +169,9 @@ public class BookCrud implements IBookCrud { //Lägg till title
 
         try {
             con = DriverManager.getConnection(
-                    "jdbc:mysql://remotemysql.com:3306/QGiurckTaL",
-                    "QGiurckTaL",
-                    "9mcXfR7XqJ");
+                    "jdbc:mysql://remotemysql.com:3306/XXXXXXXXXXXXXX",
+                    "XXXXXXXXXXXXXX",
+                    "XXXXXXXXXXXXXX");
             //     con.setAutoCommit(true);//Saves without us having to commit https://stackoverflow.com/questions/10457335/commit-or-conn-setautocommittrue
             return con;
         } catch (SQLException ex) {
