@@ -45,7 +45,7 @@ cd TheFinalBookStore
 
 Öppna sedan `http://localhost:8080/bookshop` i webbläsaren.
 
-Databasanslutningen konfigureras i `src/main/resources/application.properties`. Klassen `BookCrud` öppnar dessutom en egen anslutning, se [Kända problem](#kända-problem).
+Databasanslutningen konfigureras med miljövariablerna `DB_URL`, `DB_USERNAME` och `DB_PASSWORD`, som läses i `src/main/resources/application.properties`.
 
 ## Projektstruktur
 
@@ -75,14 +75,14 @@ Databasanslutningen konfigureras i `src/main/resources/application.properties`. 
 
 | Metod | Sökväg | Vy | Beskrivning |
 | --- | --- | --- | --- |
-| GET | `/bookshop` | `booksviewmysql` | Visar alla böcker. |
+| GET | `/bookshop` | `booksviewmysql` | Visar böcker. Sök med `q` och sortera med `sort` (`title`, `author`, `releseDate` eller `isbn`). |
 | GET | `/book/{ISBN}` | `bookview` | Visar detaljer för en bok. |
 | GET | `/book/add` | `addview` | Formulär för ny bok. |
 | POST | `/book/add` | redirect | Sparar ny bok och går till bokens sida. |
 | GET | `/book/{ISBN}/edit` | `editview` | Formulär för att redigera bok. |
 | POST | `/book/{ISBN}/edit` | redirect eller `editview` | Uppdaterar bok. Visar fel vid undantag. |
 | GET | `/book/{ISBN}/delete` | `bookDelete` | Bekräftelsesida för borttagning. |
-| GET | `/book/{ISBN}/drop` | `changesSaved` | Tar bort boken. |
+| POST | `/book/{ISBN}/drop` | `changesSaved` | Tar bort boken. GET används inte för att ändra data. |
 
 ## Datamodell
 
@@ -344,7 +344,7 @@ flowchart TD
 6. **Som butikspersonal** vill jag se lagersaldot, så att jag vet när jag behöver beställa mer.
    - *Acceptans:* Lagersaldot visas på bokens sida och i listan.
 7. **Som besökare** vill jag söka på ISBN, titel eller författare, så att jag snabbt hittar rätt bok.
-   - *Acceptans:* Sökfältet i headern finns, men filtrering är ännu inte implementerad.
+   - *Acceptans:* Sökfältet filtrerar böcker efter ISBN, titel eller författare.
 
 ## Wireframes
 
@@ -483,12 +483,4 @@ Continuous Delivery kan läggas till som ett extra steg som deployar WAR-filen t
 
 ## Kända problem
 
-- **Hemliga uppgifter i repot.** `application.properties` innehåller databasanvändarnamn och lösenord. De bör flyttas till miljövariabler, och lösenordet bör roteras.
-- **Platshållare i `BookCrud`.** Metoden `getConnection()` använder `XXXXXXXXXXXXXX` som användarnamn, lösenord och databasnamn. Den använder inte `application.properties`, så koden fungerar inte som den är skriven.
-- **Radering via GET.** `/book/{ISBN}/drop` tar bort boken med en GET-förfrågan, vilket kan utlösas av en länk. Ändra till POST eller DELETE.
-- **Uppdatering returnerar alltid `null`.** `BookCrud.updateBook` kastar inte undantag vid SQL-fel, och felet loggas felaktigt.
-- **Anslutningar stängs inte konsekvent.** Vid undantag i `addBook` och `getAllBooks` stängs inte anslutningen.
-- **`editBook` överskriver modellattributet.** Metoden lägger in `book` två gånger, så bara den senare används.
-- **Sökfältet är inte kopplat.** Formuläret i headern skickar inget till servern.
-- **Sortering och filtrering saknas.** Listan visar alla böcker i databasens ordning.
-- **Enhetstester saknas.** Det finns bara en tom testklass.
+- Applikationen kräver en tillgänglig MySQL-databas och att `DB_URL`, `DB_USERNAME` och `DB_PASSWORD` är satta.

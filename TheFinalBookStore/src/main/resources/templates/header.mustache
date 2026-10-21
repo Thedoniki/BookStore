@@ -94,11 +94,11 @@
     <!--Nav START-->
     <nav class="navbar">
         <div class="search-container rounded-left">
-            <form class="form-inline">
+            <form class="form-inline" method="get" action="/bookshop">
                 <div class="input-group">
-                    <input class="form-control" type="search" placeholder="ISBN/Title/Author" aria-label="Search">
+                    <input class="form-control" type="search" name="q" value="{{q}}" placeholder="ISBN/Title/Author" aria-label="Search">
                     <span class="input-group-btn">
-           <a href="#" ><button class="btn btn-light rounded-0" type="submit">Search</button></a>
+           <button class="btn btn-light rounded-0" type="submit">Search</button>
          </span>
                 </div>
             </form>
