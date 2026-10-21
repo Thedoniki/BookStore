@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookStore – klickbar prototyp</title>
+<style>
+  :root { --primary:#2b5876; --accent:#4e4376; --bg:#f5f6f8; --card:#fff; --text:#222; --muted:#666; --danger:#b03a2e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background:var(--bg); color:var(--text); }
+  header { background:var(--primary); color:#fff; padding:14px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header .logo { font-weight:700; font-size:1.3rem; cursor:pointer; letter-spacing:.5px; }
+  header .spacer { flex:1; }
+  header input { padding:8px 10px; border:0; border-radius:6px; width:240px; }
+  .btn { display:inline-block; padding:8px 14px; border-radius:6px; border:0; background:var(--primary); color:#fff; cursor:pointer; font-size:.95rem; text-decoration:none; }
+  .btn:hover { background:var(--accent); }
+  .btn.secondary { background:#dde3ea; color:var(--text); }
+  .btn.danger { background:var(--danger); }
+  .btn.light { background:#fff; color:var(--primary); }
+  nav.crumbs { padding:10px 24px; color:var(--muted); font-size:.9rem; }
+  nav.crumbs a { color:var(--primary); cursor:pointer; text-decoration:none; }
+  main { padding:12px 24px 40px; max-width:1100px; margin:0 auto; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:18px; }
+  .card { background:var(--card); border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.08); padding:14px; display:flex; flex-direction:column; gap:6px; }
+  .cover { height:250px; background:#dfe5ec; border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:.9rem; overflow:hidden; }
+  .cover.small { width:200px; height:250px; flex-shrink:0; }
+  .card h3 { margin:6px 0 0; font-size:1.05rem; }
+  .muted { color:var(--muted); font-size:.9rem; }
+  .detail { display:flex; gap:28px; background:var(--card); padding:24px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.08); flex-wrap:wrap; }
+  .detail dl { display:grid; grid-template-columns: 140px 1fr; gap:8px 16px; margin:0 0 16px; }
+  .detail dt { color:var(--muted); }
+  .detail dd { margin:0; }
+  form.panel { background:var(--card); padding:24px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.08); max-width:560px; }
+  .field { display:flex; flex-direction:column; margin-bottom:12px; }
+  .field label { font-size:.85rem; color:var(--muted); margin-bottom:4px; }
+  .field input { padding:9px 10px; border:1px solid #cfd6df; border-radius:6px; font-size:1rem; }
+  .field .req::after { content:" *"; color:var(--danger); }
+  .error { color:var(--danger); margin-bottom:12px; display:none; }
+  .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+  .center { text-align:center; padding:50px 10px; background:var(--card); border-radius:10px; }
+  .note { margin-top:24px; padding:12px 14px; background:#fff8e1; border-left:4px solid #f0b400; border-radius:6px; font-size:.9rem; }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo" onclick="go('#/bookshop')">BookShop</span>
+  <span class="spacer"></span>
+  <input id="search" type="search" placeholder="ISBN / Titel / Författare" oninput="filterList(this.value)">
+  <button class="btn light" onclick="go('#/add')">+ Lägg till bok</button>
+</header>
+
+<div id="crumbs" class="crumbs"></div>
+<main id="app"></main>
+
+<script>
+  // Exempeldata. Ändringar sparas bara i minnet under sessionen.
+  const books = [
+    { ISBN: 9780143127741, author: "Mark Twain", title: "Huckleberry Finn", language: "Engelska", releseDate: "1884", publisher: "Chatto & Windus", pages: "366", genre: "Klassiker", storage: "12", imageUrl: "" },
+    { ISBN: 9789129694718, author: "Selma Lagerlöf", title: "Nils Holgerssons underbara resa", language: "Svenska", releseDate: "1906", publisher: "Albert Bonnier", pages: "512", genre: "Barnbok", storage: "4", imageUrl: "" },
+    { ISBN: 9780547928227, author: "J.R.R. Tolkien", title: "Hobbiten", language: "Engelska", releseDate: "1937", publisher: "George Allen & Unwin", pages: "310", genre: "Fantasy", storage: "0", imageUrl: "" }
+  ];
+
+  const app = document.getElementById('app');
+  const crumbs = document.getElementById('crumbs');
+  let currentFilter = "";
+
+  function go(hash) { location.hash = hash; }
+  function findBook(isbn) { return books.find(b => String(b.ISBN) === String(isbn)); }
+  function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function cover(b, small) {
+    return `<div class="cover ${small ? 'small' : ''}">${b && b.imageUrl ? `<img src="${esc(b.imageUrl)}" alt="" style="width:100%;height:100%;object-fit:cover">` : 'Omslag'}</div>`;
+  }
+
+  function setCrumbs(parts) {
+    crumbs.innerHTML = parts.map((p, i) =>
+      i < parts.length - 1 ? `<a onclick="go('${p.href}')">${esc(p.label)}</a> / ` : `<span>${esc(p.label)}</span>`
+    ).join('');
+  }
+
+  function renderShelf() {
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label:'Alla böcker'}]);
+    const q = currentFilter.toLowerCase();
+    const list = books.filter(b => !q || [b.ISBN, b.title, b.author].join(' ').toLowerCase().includes(q));
+    app.innerHTML = `
+      <div class="toolbar"><h2 style="margin:0">Alla böcker (${list.length})</h2></div>
+      <div class="grid">
+        ${list.map(b => `
+          <div class="card">
+            ${cover(b)}
+            <span class="muted">${esc(b.genre)}</span>
+            <h3>${esc(b.title)}</h3>
+            <span class="muted">${esc(b.author)} · ${esc(b.releseDate)}</span>
+            <button class="btn" onclick="go('#/book/${b.ISBN}')">Visa</button>
+          </div>`).join('') || '<p class="muted">Inga böcker matchar sökningen.</p>'}
+      </div>`;
+  }
+
+  function renderDetail(isbn) {
+    const b = findBook(isbn);
+    if (!b) return notFound();
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label: b.title}]);
+    app.innerHTML = `
+      <div class="detail">
+        ${cover(b, true)}
+        <div>
+          <h2 style="margin-top:0">${esc(b.title)}</h2>
+          <dl>
+            <dt>ISBN</dt><dd>${esc(b.ISBN)}</dd>
+            <dt>Författare</dt><dd>${esc(b.author)}</dd>
+            <dt>Språk</dt><dd>${esc(b.language)}</dd>
+            <dt>Utgivning</dt><dd>${esc(b.releseDate)}</dd>
+            <dt>Förlag</dt><dd>${esc(b.publisher)}</dd>
+            <dt>Sidor</dt><dd>${esc(b.pages)}</dd>
+            <dt>Genre</dt><dd>${esc(b.genre)}</dd>
+            <dt>Lagersaldo</dt><dd>${esc(b.storage)}</dd>
+          </dl>
+          <button class="btn secondary" onclick="go('#/book/${b.ISBN}/edit')">Redigera</button>
+          <button class="btn danger" onclick="go('#/book/${b.ISBN}/delete')">Ta bort</button>
+        </div>
+      </div>`;
+  }
+
+  function formHtml(b, isNew) {
+    const v = k => esc(b ? b[k] : "");
+    return `
+      <form class="panel" onsubmit="saveBook(event, ${isNew ? 'true' : 'false'}, '${b ? b.ISBN : ''}')">
+        <div class="error" id="err">Fyll i ISBN, författare och titel.</div>
+        ${isNew ? `<div class="field"><label class="req" for="ISBN">ISBN</label><input id="ISBN" name="ISBN" required></div>` : ''}
+        <div class="field"><label class="req" for="author">Författare</label><input id="author" name="author" value="${v('author')}" required></div>
+        <div class="field"><label class="req" for="title">Titel</label><input id="title" name="title" value="${v('title')}" required></div>
+        <div class="field"><label for="language">Språk</label><input id="language" name="language" value="${v('language')}"></div>
+        <div class="field"><label for="releseDate">Utgivning</label><input id="releseDate" name="releseDate" value="${v('releseDate')}"></div>
+        <div class="field"><label for="publisher">Förlag</label><input id="publisher" name="publisher" value="${v('publisher')}"></div>
+        <div class="field"><label for="pages">Sidor</label><input id="pages" name="pages" value="${v('pages')}"></div>
+        <div class="field"><label for="genre">Genre</label><input id="genre" name="genre" value="${v('genre')}"></div>
+        <div class="field"><label for="storage">Lagersaldo</label><input id="storage" name="storage" value="${v('storage')}"></div>
+        <div class="field"><label for="imageUrl">Bild-URL</label><input id="imageUrl" name="imageUrl" value="${v('imageUrl')}"></div>
+        <div class="actions">
+          <button type="button" class="btn secondary" onclick="history.back()">Avbryt</button>
+          <button type="submit" class="btn">Spara</button>
+        </div>
+      </form>`;
+  }
+
+  function renderAdd() {
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label:'Lägg till bok'}]);
+    app.innerHTML = `<h2>Lägg till bok</h2>` + formHtml(null, true);
+  }
+
+  function renderEdit(isbn) {
+    const b = findBook(isbn);
+    if (!b) return notFound();
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label: b.title, href:'#/book/' + b.ISBN}, {label:'Redigera'}]);
+    app.innerHTML = `<h2>Redigera: ${esc(b.title)}</h2>` + formHtml(b, false);
+  }
+
+  function saveBook(e, isNew, isbn) {
+    e.preventDefault();
+    const f = e.target;
+    const data = Object.fromEntries(new FormData(f).entries());
+    if (!data.author || !data.title || (isNew && !data.ISBN)) {
+      document.getElementById('err').style.display = 'block';
+      return;
+    }
+    if (isNew) {
+      if (findBook(data.ISBN)) { alert('En bok med det ISBN:et finns redan.'); return; }
+      books.push({ ...data, ISBN: Number(data.ISBN) });
+      go('#/book/' + data.ISBN);
+    } else {
+      const b = findBook(isbn);
+      Object.assign(b, data);
+      go('#/book/' + isbn);
+    }
+  }
+
+  function renderDelete(isbn) {
+    const b = findBook(isbn);
+    if (!b) return notFound();
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label: b.title, href:'#/book/' + b.ISBN}, {label:'Ta bort'}]);
+    app.innerHTML = `
+      <div class="center">
+        <h2>Vill du ta bort boken?</h2>
+        <p class="muted">"${esc(b.title)}" av ${esc(b.author)} (ISBN ${esc(b.ISBN)})</p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn secondary" onclick="go('#/book/${b.ISBN}')">Avbryt</button>
+          <button class="btn danger" onclick="removeBook('${b.ISBN}')">Ja, ta bort</button>
+        </div>
+      </div>`;
+  }
+
+  function removeBook(isbn) {
+    const i = books.findIndex(b => String(b.ISBN) === String(isbn));
+    if (i >= 0) books.splice(i, 1);
+    go('#/deleted/' + isbn);
+  }
+
+  function renderDeleted(isbn) {
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label:'Borttagen'}]);
+    app.innerHTML = `
+      <div class="center">
+        <p>Boken med ISBN ${esc(isbn)} är nu borttagen.</p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn" onclick="go('#/add')">Lägg till ny bok</button>
+          <button class="btn secondary" onclick="go('#/bookshop')">Till alla böcker</button>
+        </div>
+      </div>`;
+  }
+
+  function notFound() {
+    setCrumbs([{label:'Hem', href:'#/bookshop'}, {label:'Hittades inte'}]);
+    app.innerHTML = `<div class="center"><p>Boken finns inte.</p><button class="btn" onclick="go('#/bookshop')">Till alla böcker</button></div>`;
+  }
+
+  function route() {
+    const h = location.hash || '#/bookshop';
+    let m;
+    if (h === '#/bookshop') return renderShelf();
+    if (h === '#/add') return renderAdd();
+    if ((m = h.match(/^#\/book\/(\d+)\/edit$/))) return renderEdit(m[1]);
+    if ((m = h.match(/^#\/book\/(\d+)\/delete$/))) return renderDelete(m[1]);
+    if ((m = h.match(/^#\/book\/(\d+)$/))) return renderDetail(m[1]);
+    if ((m = h.match(/^#\/deleted\/(\d+)$/))) return renderDeleted(m[1]);
+    notFound();
+  }
+
+  function filterList(value) {
+    currentFilter = value;
+    if ((location.hash || '#/bookshop') === '#/bookshop') renderShelf();
+    else go('#/bookshop');
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+</script>
+</body>
+</html>
