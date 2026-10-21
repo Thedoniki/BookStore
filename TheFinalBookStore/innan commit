@@ -1,0 +1,24 @@
+
+Ran terminal command: git status --short
+
+Ran terminal command: git --no-pager diff --stat
+
+Ran terminal command: git --no-pager diff --name-status
+
+Search for `.`
+
+Här är sammanfattningen av arbetsytans ändringar. **Min senaste ändring för felet på rad 99** är begränsad till följande:
+
+- I `BooksController.java` lade jag till ett gemensamt modellvärde `q`, så att headern får ett sökvärde även på andra sidor.
+- I `BooksControllerTest.java` lade jag till kontroller i två tester som verifierar att `q` finns. *Rätt länk:* `BooksControllerTest.java`.
+
+Övriga ändringar nedan fanns redan i arbetsytan innan jag gjorde den fixen; jag har inte skapat eller återställt dem:
+
+- **Projektkonfiguration och dokumentation:** `README.md`, `pom.xml`, `mvnw`, `application.properties` och `ServletInitializer.java`.
+- **Applikationskod:** `BooksController.java`, `BookCrud.java`, `IBookCrud.java` och `BookService.java`.
+- **Mallar:** `bookDelete.mustache`, `booksviewmysql.mustache`, `editview.mustache` och `header.mustache`.
+- **Tester:** `TheFinalBookStoreApplicationTests.java` är ändrad. Det finns också nya, ospårade testfiler i `controllers/` och `services/`.
+- **Borttagna filer:** äldre byggfiler under `TheFinalBookStore/${project.build.directory}/classes/`, bildfilerna `BookShopLogo.png` och `addnewBookbtn.png` under projektets `src/main/resources/images/`, samt `docs/old_prototype.html` och `old_README.md`.
+- Det finns också ändrade eller nya `.DS_Store`-filer i flera mappar.
+
+**Obs:** PNG-bilderna du bifogade är separata snapshots. Git-status visar samtidigt att motsvarande bildfiler under projektets `src/main/resources/images/` är markerade som borttagna. Jag har inte ändrat bildfilerna.
