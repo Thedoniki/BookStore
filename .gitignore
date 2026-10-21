@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+**/.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Build artifacts
+target/
+build/
+.gradle/
+out/
+*.class
+*.jar
+*.war
+
+# generated project build folder
+TheFinalBookStore/${project.build.directory}/
+**/${project.build.directory}/
+
+# local secrets
+.env
+.env.*
+application-local.properties
+secrets.*
+**/application.properties
