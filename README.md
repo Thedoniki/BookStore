@@ -40,10 +40,10 @@ Krav: Java 15 och ett fungerande Maven-wrapper-stöd (eller Maven installerat).
 
 ```bash
 cd TheFinalBookStore
-./mvnw spring-boot:run      # startar på http://localhost:8080
+./mvnw spring-boot:run      # startar på http://localhost:8081
 ```
 
-Öppna sedan `http://localhost:8080/bookshop` i webbläsaren.
+Öppna sedan `http://localhost:8081/bookshop` i webbläsaren.
 
 Databasanslutningen konfigureras med miljövariablerna `DB_URL`, `DB_USERNAME` och `DB_PASSWORD`, som läses i `src/main/resources/application.properties`.
 
